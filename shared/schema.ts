@@ -22,7 +22,7 @@ export const forumCategories = pgTable("forum_categories", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  icon: text("icon").notNull(),
+  icon: text("icon"),
   color: text("color").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
