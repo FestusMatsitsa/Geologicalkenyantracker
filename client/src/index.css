@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(210, 20%, 98%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(210, 40%, 96%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --primary: hsl(162, 88%, 28%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(210, 40%, 96%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(210, 40%, 96%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(162, 88%, 28%);
+  --radius: 0.5rem;
+  
+  /* Custom colors for geological theme */
+  --forest: hsl(162, 88%, 28%);
+  --forest-50: hsl(162, 100%, 97%);
+  --forest-100: hsl(162, 94%, 92%);
+  --forest-200: hsl(162, 87%, 83%);
+  --forest-300: hsl(162, 78%, 70%);
+  --forest-400: hsl(162, 69%, 56%);
+  --forest-500: hsl(162, 88%, 28%);
+  --forest-600: hsl(162, 85%, 39%);
+  --forest-700: hsl(162, 74%, 32%);
+  --forest-800: hsl(162, 65%, 26%);
+  --forest-900: hsl(162, 58%, 22%);
+  
+  --earth: hsl(25, 43%, 40%);
+  --earth-50: hsl(25, 70%, 96%);
+  --earth-100: hsl(25, 65%, 88%);
+  --earth-200: hsl(25, 60%, 76%);
+  --earth-300: hsl(25, 55%, 60%);
+  --earth-400: hsl(25, 48%, 46%);
+  --earth-500: hsl(25, 43%, 40%);
+  --earth-600: hsl(25, 43%, 33%);
+  --earth-700: hsl(25, 43%, 26%);
+  --earth-800: hsl(25, 43%, 20%);
+  --earth-900: hsl(25, 43%, 16%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(162, 88%, 28%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(162, 88%, 28%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Custom utility classes for geological theme */
+.text-forest {
+  color: var(--forest);
+}
+
+.bg-forest {
+  background-color: var(--forest);
+}
+
+.border-forest {
+  border-color: var(--forest);
+}
+
+.text-earth {
+  color: var(--earth);
+}
+
+.bg-earth {
+  background-color: var(--earth);
+}
+
+.border-earth {
+  border-color: var(--earth);
+}
+
+/* Gradient backgrounds */
+.bg-gradient-forest {
+  background: linear-gradient(135deg, var(--forest-500), var(--forest-600));
+}
+
+.bg-gradient-earth {
+  background: linear-gradient(135deg, var(--earth-500), var(--earth-600));
+}
+
+/* Hover effects */
+.hover-forest:hover {
+  background-color: var(--forest-600);
+}
+
+.hover-earth:hover {
+  background-color: var(--earth-600);
+}
