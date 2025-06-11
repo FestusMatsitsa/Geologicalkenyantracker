@@ -4,9 +4,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/authContext";
 import { useLocation } from "wouter";
+
+// All 47 Kenyan Counties
+const kenyanCounties = [
+  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu", 
+  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho", 
+  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui", 
+  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera", 
+  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", 
+  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri", 
+  "Samburu", "Siaya", "Taita-Taveta", "Tana River", "Tharaka-Nithi", 
+  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -160,13 +173,21 @@ export default function Auth() {
 
                 <div className="space-y-2">
                   <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    placeholder="e.g., Nairobi, Kenya"
-                  />
+                  <Select 
+                    value={formData.location} 
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, location: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your county" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {kenyanCounties.map((county) => (
+                        <SelectItem key={county} value={county}>
+                          {county}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </>
             )}

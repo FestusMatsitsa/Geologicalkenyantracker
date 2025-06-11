@@ -23,6 +23,18 @@ import {
   Settings
 } from "lucide-react";
 
+// All 47 Kenyan Counties
+const kenyanCounties = [
+  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu", 
+  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho", 
+  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui", 
+  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera", 
+  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", 
+  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri", 
+  "Samburu", "Siaya", "Taita-Taveta", "Tana River", "Tharaka-Nithi", 
+  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
+
 export default function Profile() {
   const { user, updateProfile } = useAuth();
   const { toast } = useToast();
@@ -231,13 +243,21 @@ export default function Profile() {
                       <div className="space-y-2">
                         <Label htmlFor="location">Location</Label>
                         {isEditing ? (
-                          <Input
-                            id="location"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleInputChange}
-                            placeholder="e.g., Nairobi, Kenya"
-                          />
+                          <Select 
+                            value={formData.location} 
+                            onValueChange={(value) => setFormData(prev => ({ ...prev, location: value }))}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select your county" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {kenyanCounties.map((county) => (
+                                <SelectItem key={county} value={county}>
+                                  {county}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         ) : (
                           <p className="text-slate-700 py-2">{user.location || "Not specified"}</p>
                         )}
