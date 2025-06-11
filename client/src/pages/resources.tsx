@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 
 const resourceCategories = [
-  { name: "All Categories", value: "" },
+  { name: "All Categories", value: "all" },
   { name: "Geological Maps", value: "Geological Maps", icon: Map, color: "text-blue-600 bg-blue-100" },
   { name: "Field Manuals", value: "Field Manuals", icon: BookOpen, color: "text-green-600 bg-green-100" },
   { name: "Research Papers", value: "Research Papers", icon: FileText, color: "text-purple-600 bg-purple-100" },
@@ -34,7 +34,7 @@ const resourceCategories = [
 ];
 
 export default function Resources() {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newResource, setNewResource] = useState({
@@ -115,11 +115,54 @@ export default function Resources() {
     }
   };
 
-  const filteredResources = resources.filter((resource: any) => {
+  // Edit and Delete mutations
+  const deleteResourceMutation = useMutation({
+    mutationFn: async (resourceId: number) => {
+      const result = await apiRequest(`/api/resources/${resourceId}`, {
+        method: "DELETE",
+      });
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/resources"] });
+      toast({
+        title: "Resource deleted",
+        description: "The resource has been successfully deleted.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete resource",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleEditResource = (resource: any) => {
+    setNewResource({
+      title: resource.title,
+      description: resource.description || "",
+      category: resource.category,
+      fileUrl: resource.fileUrl || "",
+      fileName: resource.fileName || "",
+      fileSize: resource.fileSize || "",
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleDeleteResource = async (resourceId: number) => {
+    if (window.confirm("Are you sure you want to delete this resource? This action cannot be undone.")) {
+      deleteResourceMutation.mutate(resourceId);
+    }
+  };
+
+  const filteredResources = Array.isArray(resources) ? resources.filter((resource: any) => {
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          resource.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+    const matchesCategory = selectedCategory === "all" || resource.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  }) : [];
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
@@ -182,7 +225,10 @@ export default function Resources() {
                 >
                   <CardContent className="p-6">
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${category.color}`}>
-                      {React.createElement(IconComponent, { className: "w-8 h-8" })}
+                      {category.name === "Geological Maps" && <Map className="w-8 h-8" />}
+                      {category.name === "Field Manuals" && <BookOpen className="w-8 h-8" />}
+                      {category.name === "Research Papers" && <FileText className="w-8 h-8" />}
+                      {category.name === "Thesis Examples" && <RotateCcw className="w-8 h-8" />}
                     </div>
                     <h3 className="text-lg font-semibold text-slate-700 mb-2">{category.name}</h3>
                     <p className="text-sm text-slate-500 mb-4">
@@ -333,6 +379,28 @@ export default function Resources() {
                       >
                         <Download className="w-4 h-4" />
                       </Button>
+                      {user && resource.uploadedBy?.id === user.id && (
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button size="sm" variant="ghost">
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem onClick={() => handleEditResource(resource)}>
+                              <Edit className="w-4 h-4 mr-2" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => handleDeleteResource(resource.id)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      )}
                     </div>
                   </div>
                 ))
