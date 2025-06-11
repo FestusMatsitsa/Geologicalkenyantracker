@@ -36,6 +36,7 @@ export interface IStorage {
   getResource(id: number): Promise<(Resource & { uploadedBy: User }) | undefined>;
   createResource(resource: InsertResource): Promise<Resource>;
   incrementDownloadCount(id: number): Promise<void>;
+  deleteResource(id: number): Promise<void>;
   
   // Event operations
   getEvents(limit?: number): Promise<(Event & { organizer: User })[]>;
@@ -269,6 +270,10 @@ export class DatabaseStorage implements IStorage {
     await db.update(resources)
       .set({ downloadCount: sql`${resources.downloadCount} + 1` })
       .where(eq(resources.id, id));
+  }
+
+  async deleteResource(id: number): Promise<void> {
+    await db.delete(resources).where(eq(resources.id, id));
   }
 
   async getEvents(limit = 50): Promise<(Event & { organizer: User })[]> {

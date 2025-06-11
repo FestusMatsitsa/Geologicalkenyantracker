@@ -257,6 +257,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/resources/:id", authenticateToken, async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const resource = await storage.getResource(id);
+      
+      if (!resource) {
+        return res.status(404).json({ message: "Resource not found" });
+      }
+      
+      // Only allow resource owner to delete
+      if (resource.uploadedBy.id !== req.user.userId) {
+        return res.status(403).json({ message: "Not authorized to delete this resource" });
+      }
+      
+      await storage.deleteResource(id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ message: "Server error", error });
+    }
+  });
+
   // Event routes
   app.get("/api/events", async (req, res) => {
     try {

@@ -118,9 +118,7 @@ export default function Resources() {
   // Edit and Delete mutations
   const deleteResourceMutation = useMutation({
     mutationFn: async (resourceId: number) => {
-      const result = await apiRequest(`/api/resources/${resourceId}`, {
-        method: "DELETE",
-      });
+      const result = await apiRequest("DELETE", `/api/resources/${resourceId}`);
       return result;
     },
     onSuccess: () => {
