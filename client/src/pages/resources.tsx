@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/authContext";
@@ -18,7 +19,10 @@ import {
   BookOpen,
   RotateCcw,
   File,
-  User
+  User,
+  Edit,
+  Trash2,
+  MoreVertical
 } from "lucide-react";
 
 const resourceCategories = [
@@ -168,7 +172,7 @@ export default function Resources() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {resourceCategories.slice(1).map((category) => {
               const IconComponent = category.icon;
-              const categoryResources = resources.filter((r: any) => r.category === category.value);
+              const categoryResources = Array.isArray(resources) ? resources.filter((r: any) => r.category === category.value) : [];
               
               return (
                 <Card 
@@ -178,7 +182,7 @@ export default function Resources() {
                 >
                   <CardContent className="p-6">
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 ${category.color}`}>
-                      <IconComponent className="w-8 h-8" />
+                      {React.createElement(IconComponent, { className: "w-8 h-8" })}
                     </div>
                     <h3 className="text-lg font-semibold text-slate-700 mb-2">{category.name}</h3>
                     <p className="text-sm text-slate-500 mb-4">

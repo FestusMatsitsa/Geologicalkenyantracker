@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { useAuth } from "@/lib/authContext";
 import { 
   Briefcase, 
   MessageSquare, 
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
+  const { user } = useAuth();
   const { data: jobs = [] } = useQuery({
     queryKey: ["/api/jobs?limit=3"],
   });
@@ -192,26 +194,28 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-br from-green-700 to-green-800">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Ready to Join Kenya's Geological Community?</h2>
-          <p className="text-xl text-green-100 mb-8">Connect with fellow geologists, find opportunities, and advance your career with GeoConnect Kenya.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth">
-              <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold">
-                Create Your Profile
-              </Button>
-            </Link>
-            <Link href="/forums">
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-green-700 px-8 py-3 text-lg font-semibold">
-                Learn More
-              </Button>
-            </Link>
+      {/* Call to Action - Only show for non-authenticated users */}
+      {!user && (
+        <section className="py-16 bg-gradient-to-br from-green-700 to-green-800">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">Ready to Join Kenya's Geological Community?</h2>
+            <p className="text-xl text-green-100 mb-8">Connect with fellow geologists, find opportunities, and advance your career with GeoConnect Kenya.</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/auth">
+                <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold">
+                  Create Your Profile
+                </Button>
+              </Link>
+              <Link href="/forums">
+                <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-green-700 px-8 py-3 text-lg font-semibold">
+                  Learn More
+                </Button>
+              </Link>
+            </div>
+            <p className="text-green-100 text-sm mt-6">Join 500+ geologists already connected on our platform</p>
           </div>
-          <p className="text-green-100 text-sm mt-6">Join 500+ geologists already connected on our platform</p>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
