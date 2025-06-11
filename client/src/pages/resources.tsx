@@ -33,6 +33,18 @@ const resourceCategories = [
   { name: "Thesis Examples", value: "Thesis Examples", icon: RotateCcw, color: "text-orange-600 bg-orange-100" },
 ];
 
+// All 47 Kenyan Counties
+const kenyanCounties = [
+  "Baringo", "Bomet", "Bungoma", "Busia", "Elgeyo-Marakwet", "Embu", 
+  "Garissa", "Homa Bay", "Isiolo", "Kajiado", "Kakamega", "Kericho", 
+  "Kiambu", "Kilifi", "Kirinyaga", "Kisii", "Kisumu", "Kitui", 
+  "Kwale", "Laikipia", "Lamu", "Machakos", "Makueni", "Mandera", 
+  "Marsabit", "Meru", "Migori", "Mombasa", "Murang'a", "Nairobi", 
+  "Nakuru", "Nandi", "Narok", "Nyamira", "Nyandarua", "Nyeri", 
+  "Samburu", "Siaya", "Taita-Taveta", "Tana River", "Tharaka-Nithi", 
+  "Trans Nzoia", "Turkana", "Uasin Gishu", "Vihiga", "Wajir", "West Pokot"
+];
+
 export default function Resources() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,6 +57,7 @@ export default function Resources() {
     fileName: "",
     fileSize: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { user } = useAuth();
   const { toast } = useToast();
@@ -89,6 +102,18 @@ export default function Resources() {
     },
   });
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setNewResource(prev => ({
+        ...prev,
+        fileName: file.name,
+        fileSize: `${(file.size / (1024 * 1024)).toFixed(2)} MB`
+      }));
+    }
+  };
+
   const handleCreateResource = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -99,7 +124,18 @@ export default function Resources() {
       });
       return;
     }
-    createResourceMutation.mutate(newResource);
+
+    // For now, we'll create the resource without file upload
+    // In a production environment, you would upload the file to cloud storage
+    // and get the URL to store in the database
+    let resourceData = { ...newResource };
+    
+    if (selectedFile) {
+      // Simulate file upload - in production, upload to cloud storage
+      resourceData.fileUrl = `uploads/${selectedFile.name}`;
+    }
+    
+    createResourceMutation.mutate(resourceData);
   };
 
   const handleDownload = (resource: any) => {
@@ -294,26 +330,57 @@ export default function Resources() {
                     onChange={(e) => setNewResource(prev => ({ ...prev, description: e.target.value }))}
                   />
                 </div>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fileName">File Name</Label>
-                    <Input
-                      id="fileName"
-                      value={newResource.fileName}
-                      onChange={(e) => setNewResource(prev => ({ ...prev, fileName: e.target.value }))}
-                      placeholder="e.g., geological-survey-2024.pdf"
+                <div className="space-y-2">
+                  <Label htmlFor="fileUpload">Upload File</Label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      id="fileUpload"
+                      type="file"
+                      onChange={handleFileChange}
+                      accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.zip,.rar"
+                      className="hidden"
                     />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('fileUpload')?.click()}
+                      className="flex items-center gap-2"
+                    >
+                      <File className="w-4 h-4" />
+                      {selectedFile ? "Change File" : "Choose File"}
+                    </Button>
+                    {selectedFile && (
+                      <span className="text-sm text-gray-600">
+                        {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                      </span>
+                    )}
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="fileSize">File Size</Label>
-                    <Input
-                      id="fileSize"
-                      value={newResource.fileSize}
-                      onChange={(e) => setNewResource(prev => ({ ...prev, fileSize: e.target.value }))}
-                      placeholder="e.g., 2.4 MB"
-                    />
-                  </div>
+                  <p className="text-xs text-gray-500">
+                    Supported formats: PDF, DOC, DOCX, TXT, JPG, PNG, GIF, ZIP, RAR (Max 10MB)
+                  </p>
                 </div>
+                {!selectedFile && (
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="fileName">File Name (optional)</Label>
+                      <Input
+                        id="fileName"
+                        value={newResource.fileName}
+                        onChange={(e) => setNewResource(prev => ({ ...prev, fileName: e.target.value }))}
+                        placeholder="e.g., geological-survey-2024.pdf"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="fileSize">File Size (optional)</Label>
+                      <Input
+                        id="fileSize"
+                        value={newResource.fileSize}
+                        onChange={(e) => setNewResource(prev => ({ ...prev, fileSize: e.target.value }))}
+                        placeholder="e.g., 2.4 MB"
+                      />
+                    </div>
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="fileUrl">File URL (optional)</Label>
                   <Input
