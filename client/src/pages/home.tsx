@@ -42,18 +42,20 @@ export default function Home() {
             <p className="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
               Join Kenya's premier professional hub for geologists. Network, collaborate, share research, find opportunities, and shape the future of our geological profession.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/auth">
-                <Button size="lg" className="bg-green-700 hover:bg-green-800 text-white px-8 py-3 text-lg font-semibold">
-                  Join the Community
-                </Button>
-              </Link>
-              <Link href="/forums">
-                <Button variant="outline" size="lg" className="border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 text-lg font-semibold">
-                  Explore Platform
-                </Button>
-              </Link>
-            </div>
+{!user && (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/auth">
+                  <Button size="lg" className="bg-green-700 hover:bg-green-800 text-white px-8 py-3 text-lg font-semibold">
+                    Join the Community
+                  </Button>
+                </Link>
+                <Link href="/forums">
+                  <Button variant="outline" size="lg" className="border-green-700 text-green-700 hover:bg-green-700 hover:text-white px-8 py-3 text-lg font-semibold">
+                    Explore Platform
+                  </Button>
+                </Link>
+              </div>
+            )}
             <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-slate-500">
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-700">500+</div>
