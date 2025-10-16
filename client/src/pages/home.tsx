@@ -209,7 +209,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/forums">
-                <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-green-700 px-8 py-3 text-lg font-semibold">
+                <Button variant="outline" size="lg" className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold">
                   Learn More
                 </Button>
               </Link>
