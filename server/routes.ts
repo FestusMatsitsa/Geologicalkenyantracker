@@ -57,24 +57,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/login", async (req, res) => {
     try {
       const { email, password } = req.body;
-      
+      console.log("Login attempt:", { email });
+
+      if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required" });
+      }
+
       const user = await storage.getUserByEmail(email);
+      console.log("User fetched:", user);
+
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
-      
+
       const isValidPassword = await bcrypt.compare(password, user.password);
+      console.log("Password valid:", isValidPassword);
+
       if (!isValidPassword) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
-      
-      const token = jwt.sign({ userId: user.id, username: user.username }, JWT_SECRET);
-      
+
+      if (!process.env.JWT_SECRET && !JWT_SECRET) {
+        console.error("❌ Missing JWT_SECRET environment variable");
+        return res.status(500).json({ message: "Server misconfiguration" });
+      }
+
+      const token = jwt.sign(
+        { userId: user.id, username: user.username },
+        process.env.JWT_SECRET || JWT_SECRET,
+        { expiresIn: "7d" }
+      );
+
+      console.log("JWT created successfully");
+
       res.json({ user: { ...user, password: undefined }, token });
-    } catch (error) {
-      res.status(500).json({ message: "Server error", error });
+    }catch (error) {
+      console.error("Login error:", error);
+      const message =
+        error instanceof Error ? error.message : "Unknown server error";
+      res.status(500).json({ message: "Server error", error: message });
     }
-  });
+  });;
 
   // User routes
   app.get("/api/users/me", authenticateToken, async (req: any, res) => {
