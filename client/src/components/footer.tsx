@@ -88,8 +88,8 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Community</h3>
             <ul className="space-y-2 text-slate-300">
-              {communityLinks.map((link) => (
-                <li key={link.href}>
+              {communityLinks.map((link, i) => (
+                <li key={`${link.href}-${i}`}>
                   <Link href={link.href}>
                     <span className="hover:text-white transition-colors cursor-pointer flex items-center">
                       <link.icon className="w-4 h-4 mr-2" />
@@ -105,8 +105,8 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Opportunities</h3>
             <ul className="space-y-2 text-slate-300">
-              {opportunityLinks.map((link) => (
-                <li key={link.href}>
+              {opportunityLinks.map((link, i) => (
+                <li key={`${link.href}-${i}`}>
                   <Link href={link.href}>
                     <span className="hover:text-white transition-colors cursor-pointer flex items-center">
                       <link.icon className="w-4 h-4 mr-2" />
@@ -119,11 +119,12 @@ export default function Footer() {
           </div>
 
           {/* Resources Links */}
+
           <div>
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <ul className="space-y-2 text-slate-300">
-              {resourceLinks.map((link) => (
-                <li key={link.href}>
+              {resourceLinks.map((link, i) => (
+                <li key={`${link.href}-${i}`}>
                   <Link href={link.href}>
                     <span className="hover:text-white transition-colors cursor-pointer flex items-center">
                       <link.icon className="w-4 h-4 mr-2" />
