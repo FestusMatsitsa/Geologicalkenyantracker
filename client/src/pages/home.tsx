@@ -204,7 +204,7 @@ export default function Home() {
             <p className="text-xl text-green-100 mb-8">Connect with fellow geologists, find opportunities, and advance your career with GeoConnect Kenya.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/auth">
-                <Button size="lg" className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold">
+                <Button variant="outline" size="lg" className="bg-white text-green-700 hover:bg-green-50 px-8 py-3 text-lg font-semibold">
                   Create Your Profile
                 </Button>
               </Link>
